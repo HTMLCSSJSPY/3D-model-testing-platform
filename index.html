@@ -8,8 +8,6 @@
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
         .model-container { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; }
         .model-image { width: 100%; max-height: 400px; object-fit: contain; }
-        .comments { margin-top: 20px; }
-        .comment { background: #f0f0f0; padding: 10px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -21,24 +19,16 @@
 
     <template id="model-template">
         <div class="model-container">
-            <h2 class="model-name"></h2>
+            <h2 class="model-name"><a href="#" class="model-link"></a></h2>
             <img class="model-image" alt="Model Image">
             <p class="model-description"></p>
-            <a href="#" class="download-link">Download STL</a>
-            <button class="test-button">Mark as Tested</button>
-            <div class="comments">
-                <h3>Comments</h3>
-                <div class="comment-list"></div>
-                <textarea class="comment-input" placeholder="Add a comment"></textarea>
-                <button class="add-comment">Add Comment</button>
-            </div>
         </div>
     </template>
 
     <script>
         const models = [
-            { name: "1x1x2 Rubik's cube", src: "1x1x2_v1.stl", description: "1x1x2 Rubik's cube", downloadUrl: "1x1x2_v1.stl", image: "1x1x2.png" },
-            { name: "Model 2", src: "path/to/model2.stl", description: "Description for Model 2", downloadUrl: "path/to/model2.stl", image: "path/to/model2.jpg" }
+            { name: "1x1x2 Rubik's cube", description: "1x1x2 Rubik's cube", image: "1x1x2.png", detailPage: "1x1x2_Rubiks_cube.html" },
+            { name: "Model 2", description: "Description for Model 2", image: "path/to/model2.jpg", detailPage: "model_2.html" }
         ];
 
         const modelsContainer = document.getElementById('models');
@@ -46,33 +36,15 @@
 
         models.forEach(model => {
             const modelElement = template.content.cloneNode(true);
-            modelElement.querySelector('.model-name').textContent = model.name;
+            const modelLink = modelElement.querySelector('.model-link');
+            modelLink.textContent = model.name;
+            modelLink.href = model.detailPage;
+
             const imageElement = modelElement.querySelector('.model-image');
             imageElement.src = model.image;
             imageElement.alt = model.name;
+
             modelElement.querySelector('.model-description').textContent = model.description;
-            modelElement.querySelector('.download-link').href = model.downloadUrl;
-
-            const testButton = modelElement.querySelector('.test-button');
-            testButton.addEventListener('click', () => {
-                testButton.textContent = 'Tested';
-                testButton.disabled = true;
-            });
-
-            const commentList = modelElement.querySelector('.comment-list');
-            const commentInput = modelElement.querySelector('.comment-input');
-            const addCommentButton = modelElement.querySelector('.add-comment');
-
-            addCommentButton.addEventListener('click', () => {
-                const commentText = commentInput.value.trim();
-                if (commentText) {
-                    const commentElement = document.createElement('div');
-                    commentElement.classList.add('comment');
-                    commentElement.textContent = commentText;
-                    commentList.appendChild(commentElement);
-                    commentInput.value = '';
-                }
-            });
 
             modelsContainer.appendChild(modelElement);
         });
